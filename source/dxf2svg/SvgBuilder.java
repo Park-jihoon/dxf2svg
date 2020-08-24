@@ -20,7 +20,7 @@
 **				1.11 - September 6, 2002 Added a HeaderProcessor object.
 **				1.20 - October 20, 2003 Made changes to the writeHTMLWrapper()
 **				that will output a french and english html wrapper as required.
-**				1.30 - October 29, 2003 Added functions that can optionally 
+**				1.30 - October 29, 2003 Added functions that can optionally
 **				make html wrapper files with the boardno values of the drawing.
 **				1.40 - March 2, 2004 Updated the DTD.
 **				1.5 - July 7, 2004 Added methods to apply additional attributes
@@ -30,14 +30,14 @@
 **				with an ID of 'Page_1'.
 **				1.7 - August 30, 2004 Commented out checkFileExists() so all files
 **				will be over-written by new files without checking.
-**				1.71 - February 10, 2005 Updated @param tag with parameter name to 
+**				1.71 - February 10, 2005 Updated @param tag with parameter name to
 **				correct error with Javadoc 1.4.2-04.
 **				1.80 - April 11, 2005 Added height and width attributes to the <svg>
 **				tag and put <defs> tags around the javascript.
 **				1.90 - April 14, 2005 Removed reference to the HeaderProcessor object.
 **				2.00 - May 18, 2005 Made changes to accomodate the HTMLWrapperBuilder.
 **				2.01 - July 29, 2005 Moved the getAttributes() method out of JavaScript
-**				processing if statement. Fixes additional attributes not showing 
+**				processing if statement. Fixes additional attributes not showing
 **				on <svg> tag if there is not JavaScript.
 **
 **	TODO:
@@ -138,8 +138,8 @@ public final class SvgBuilder
 		SSG 				= dxfc.getStyleSheetGenerator();// assign StyleSheetGenerator.
 		svgUtility 			= dxfc.getSvgUtil();			// conversion utility
 	}
-	
-	
+
+
 	/** This method allows you to apply attributes to the root element &lt;svg&gt;.
 	*/
 	public void addAttribute(Attribute attrib)
@@ -150,7 +150,7 @@ public final class SvgBuilder
 			vAttribs.add(attrib);
 			return;
 		}
-		
+
 		Attribute a = null;
 		// do not store duplicate attributes.
 		for (int i = 0; i < vAttribs.size(); i++)
@@ -163,7 +163,7 @@ public final class SvgBuilder
 		}
 		vAttribs.add(attrib);
 	}
-	
+
 	/**
 	*	Returns additional attributes if any attributes if there are any.
 	*/
@@ -171,7 +171,7 @@ public final class SvgBuilder
 	{
 		// The SvgElement can contain ElementEvent objects which are the attribs like onclick.
 		StringBuffer attribs = new StringBuffer();
-		
+
 		if (vAttribs != null)
 		{
 			Attribute attrib = null;
@@ -181,7 +181,7 @@ public final class SvgBuilder
 				attribs.append(attrib.toString());
 			}  // end for
 		} // end if
-		
+
 		return attribs.toString();
 	}
 
@@ -275,7 +275,11 @@ public final class SvgBuilder
 		//******************** viewbox attribs ********************/
 		// now figure out the dimensioning for the <svg> tag.
 		// <svg xml:space="preserve" id="FIG_10-20" width="482" height="602" viewBox="0 0 482 602" >
-		SvgHeader.append("<svg xml:space=\"preserve\"");
+		SvgHeader.append("<svg xmlns:svg=\"http://www.w3.org/2000/svg\" xml:space=\"preserve\"\n");
+		SvgHeader.append(" xmlns=\"http://www.w3.org/2000/svg\"\n");
+		SvgHeader.append(" xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n");
+		SvgHeader.append(" version=\"1.1\" baseProfile=\"basic\"\n");
+
 		// calculate width and height and normalize if dxf window is not 0,0
 		double XMax = svgUtility.getLimitsMaxX() * svgUtility.Units();
 		double XMin = svgUtility.getLimitsMinX() * svgUtility.Units();
@@ -362,7 +366,7 @@ public final class SvgBuilder
 	{	SvgPatternList = hatchPatterns;	}
 
 	/**	Allows the submission of blocks to SvgBuilder for output
-	*	to the Svg file. Here we are talking about DXF blocks which translates 
+	*	to the Svg file. Here we are talking about DXF blocks which translates
 	*	into entities in the SVG.
 	*/
 	public void submitSvgSymbols(Vector blocks)
@@ -388,8 +392,8 @@ public final class SvgBuilder
 		File OUT;							// File descriptor for out file
 		String htmlTargetName;				// Name to appear in <embed> tags.
 		String htmlTargetNameRoot;			// Name of target file without extension.
-		
-		
+
+
 		// Now we will group the entire set of layers as a page within the svg
 		// This is a kludge to accomodate scripting from the menu.svg developed
 		// for Spar. This element is not handled by modifyAttributes(). If you wish
@@ -398,9 +402,9 @@ public final class SvgBuilder
 		// add that SvgGroup (since it is the first child element of <svg>) to vLayer.
 		SOut.add(0,"<g id=\"Page_1\">");
 		SOut.add("</g>  <!-- id=\"Page_1\" -->");
-			
-			
-		// We need this file for the initial SVG. Later if required, we 
+
+
+		// We need this file for the initial SVG. Later if required, we
 		// zip this file so we need both the svg name and the compressed file
 		// name. If the file is not to be compressed then we just need the name
 		// of the svg file for writing out the the <embed> tags in the html wrapper(s).
@@ -414,13 +418,13 @@ public final class SvgBuilder
 		{
 			htmlTargetName = new String(FileNameOut);
 		}
-		
+
 		// Let's now get just the name of the target without the path information
 		// for the title of the html and the src for the <embed> tag in the html.
 		File TMP_HTML_TARGET_NAME = new File(htmlTargetName);
 		htmlTargetName = TMP_HTML_TARGET_NAME.getName();
 		TMP_HTML_TARGET_NAME = null;
-		
+
 		OUT	= new File(FileNameOut);
 
 
@@ -509,7 +513,7 @@ public final class SvgBuilder
 		}
 		BWriter.write("</svg>");
 		BWriter.close();
-		
+
 		//////////////////////
 		//  HTML Wrappers   //
 		//////////////////////
@@ -522,25 +526,25 @@ public final class SvgBuilder
 			HtmlWrapperBuilder wb = new HtmlWrapperBuilder(DxfConvertRef, this);
 			wb.writeHtmlWrapper();
 		}
-		
+
 		// Here we will compress the file we just output if the user requested it.
 		if (isZipped)
 		{
 			int SIZE = 100;
 			GZIPOutputStream GZIPStream = new GZIPOutputStream(
 				new FileOutputStream(new File(zipFileNameOut)) );
-				
+
 			DataOutputStream GZIPOut = new DataOutputStream(
 				new BufferedOutputStream(GZIPStream) );
-				
+
 			File IN = new File(FileNameOut);
-			
+
 			DataInputStream  svgStreamIn = new DataInputStream(
 				new BufferedInputStream( new FileInputStream(IN) ) );
 
 
 
-			
+
 			byte[] Buf = new byte[SIZE];
 
 			int bytesRead = 0;
@@ -553,24 +557,24 @@ public final class SvgBuilder
 					{
 						GZIPOut.write(Buf[i]);
 					} // end for
-		
+
 				} // end if
 				else
 				{
 					GZIPOut.write(Buf);
 				}
 			}
-			
+
 			svgStreamIn.close();
 
 			GZIPOut.close();
-			
+
 			// Remove the Original svg file leaving only the compressed file.
 			IN.delete();
 		}
 	}
-	
-	
+
+
 	/** This method detects if the graphic is a wiring diagram.
 	*/
 	protected boolean isWiring()
@@ -592,14 +596,14 @@ public final class SvgBuilder
 				return true; // stops looking after it finds a match for gang or wire.
 			}
 		}
-		
+
 		return false;
 	}
-	
-	
 
 
-	
+
+
+
 
 
 	/** Checks the DXF conversion directory for the presents of an
@@ -619,7 +623,7 @@ public final class SvgBuilder
 
 
 	// This method is protected so it will be added to documentation even though
-	// the class if final. You could include a -private flag in makedoc but 
+	// the class if final. You could include a -private flag in makedoc but
 	// there are a bunch of private methods that are not required.
 	/** Determines the SVG's file name by trimming the DXF's extension
 	*	and applying one of three possible extensions.&quot;.svg&quot;.
@@ -643,13 +647,13 @@ public final class SvgBuilder
 		int len = FileName.length();
 		// We collect the root name sans extension.
 		String fOut = FileName.substring(0,(len - 4));
-			
+
 		switch (extension)
 		{
 			case SVG:
 				fOut = fOut.concat(".svg");
 				break;
-			
+
 			case HTML:
 				fOut = fOut.concat(".html");
 				break;
@@ -657,7 +661,7 @@ public final class SvgBuilder
 			case SVGZ:
 				fOut = fOut.concat(".svgz");
 				break;
-				
+
 			default:
 				System.err.println("SvgBuilder.makeFileNameOut() error: illegal extension value argument.");
 				System.err.println("Expected SVG, HTML, or SVGZ but got:" + extension);
@@ -668,10 +672,10 @@ public final class SvgBuilder
 
 		return fOut;
 	}
-	
 
-	
-	
+
+
+
 
 	/** This method searches the content of the Svg document prior to output. The pattern
 	*	to search for is denoted by the argument Pattern p (see {@link java.util.regex.Pattern}
@@ -680,15 +684,15 @@ public final class SvgBuilder
 	*	The matchingContent Vector is where matching content strings are placed for futher
 	*	processing. This Vector may be null if match counts are required but no content.
 	*	<P>
-	*	The return value is the number of matches found. 
+	*	The return value is the number of matches found.
 	*/
 	public int searchSvgContent(Vector matchingContent, Pattern p)
 	{
-		
+
 		Vector[] vArray = new Vector[2];	// Array of the vectors that contain SVG elements.
 		vArray[0] = SvgEntityDeclareList;
 		vArray[1] = SvgEntityList;
-									
+
 		int numFound = 0;					// Number of matching patterns
 
 		for (int j = 0; j < vArray.length; j++)
@@ -698,7 +702,7 @@ public final class SvgBuilder
 			{
 				Object s;
 				// In this loop we are looking for SvgText elements that are not
-				// part of any group, or, SvgText elements whose parent element 
+				// part of any group, or, SvgText elements whose parent element
 				// is <svg>.
 				for (int i = 0; i < vArray[j].size(); i++)
 				{
@@ -721,7 +725,7 @@ public final class SvgBuilder
 					}
 					// This is by far more common. Almost all elements in the SVG are contained
 					// in SvgCollections. Let's analyse them one by one for SvgText elements.
-					else if (s instanceof SvgCollection) 
+					else if (s instanceof SvgCollection)
 					{
 						SvgCollection sColl = (SvgCollection)vArray[j].get(i);
 						// Even if the vector is null it will still return the number of matches.
@@ -731,7 +735,7 @@ public final class SvgBuilder
 				} // end for
 			} // end if
 		} // end for
-		
+
 		return numFound;
 	}
 
@@ -768,9 +772,9 @@ public final class SvgBuilder
 		}
 	}
 
-	
-	/** This method allows extra code specific to the current conversion file to 
-	*	be added on-the-fly. This could occur if conditional processing detects 
+
+	/** This method allows extra code specific to the current conversion file to
+	*	be added on-the-fly. This could occur if conditional processing detects
 	*	values that need to be added to the &lt;script&gt; tag during this file's
 	*	conversion. This occurs in functions like note searches. Some files have
 	*	notes that require JavaScript, others don't.
@@ -782,21 +786,21 @@ public final class SvgBuilder
 		{
 			javaScript = new Vector();
 		}
-		
+
 		javaScript.add(javascript);
 	}
-	
-	
+
+
 	public boolean isJavaScript()
 	{
 		if (javaScript == null || javaScript.isEmpty())
 		{
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 
 	/** Returns a String containing the JavaScript syntax required based on
 	*	the INCLUDE_JAVASCRIPT environment variable set in Dxf2Svg.
@@ -828,7 +832,7 @@ public final class SvgBuilder
 			{
 				jsStr.append((String)jsStackIt.next());
 			}
-			jsStr.append("//]]>\n</script>\n");				
+			jsStr.append("//]]>\n</script>\n");
 		}
 
 		return jsStr.toString();
